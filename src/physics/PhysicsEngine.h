@@ -19,7 +19,7 @@ public:
 
   void addConstraint(int bodyID, int vectorID);
 
-  Eigen::Matrix2d rotationMatrixB(double theta);
+  static Eigen::Matrix2d rotationMatrixB(double theta);
 
   std::vector<GroundPoint> getGroundPoints() const;
 
@@ -36,6 +36,8 @@ public:
   Eigen::MatrixXd getJacobian();
 
   Eigen::MatrixXd getSystemMatrix();
+
+  void setGravity(const Eigen::Vector3d &gravity);
 
 private:
   std::vector<GroundPoint> m_groundPoints;

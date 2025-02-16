@@ -18,17 +18,11 @@ bool Application::initialize() {
   const GroundPoint groundPoint(Eigen::Vector2d(0.0, 0.0)); // s1Am
 
   Body body(Eigen::Vector2d(0.5, 0.0), 0.0, 7.0, 1.4);
-  body.addVector(Eigen::Vector2d(-0.5, 0.0)); // s1Am
-
-  Body body1(Eigen::Vector2d(1.5, 0.0), 0.0, 14.0, 2.8);
 
   m_physicsEngine.addGroundPoint(groundPoint);
   m_physicsEngine.addBody(body);
 
   m_physicsEngine.initialize();
-
-  m_physicsEngine.addConstraint(0, 0);
-
 
   return true;
 }
@@ -38,6 +32,7 @@ void Application::run() {
     WindowManager::pollEvents();
 
     m_renderer.beginFrame();
+    m_renderer.render(m_physicsEngine); // Render bodies
     m_imGuiManager.renderGui(m_physicsEngine);
 
     m_windowManager.swapBuffers();

@@ -13,7 +13,7 @@ void PhysicsEngine::initialize() {
   if (m_bodies.empty()) return;
   constexpr int dof = 3;
   const int numBodies = m_bodies.size();
-  constexpr int numConstraints = 2;
+  constexpr int numConstraints = 0;
 
   m_systemMatrix.resize(numBodies * dof + numConstraints, numBodies * dof + numConstraints);
   m_systemMatrix.setZero();
@@ -21,7 +21,11 @@ void PhysicsEngine::initialize() {
   m_massInertiaMatrix.resize(numBodies * dof, numBodies * dof);
   m_massInertiaMatrix.setZero();
 
-  m_jacobian.resize(numConstraints, numBodies * dof);
+  if constexpr (numConstraints == 0) {
+    m_jacobian.resize(numConstraints, numConstraints);
+  } else {
+    m_jacobian.resize(numConstraints, numBodies * dof);
+  }
   m_jacobian.setZero();
 
   m_rightHandVector.resize(numBodies * dof + numConstraints);
@@ -51,7 +55,7 @@ void PhysicsEngine::addBody(const Body &body) {
   m_bodies.push_back(body);
 }
 
-Eigen::Matrix2d PhysicsEngine::rotationMatrixB(double theta) {
+Eigen::Matrix2d PhysicsEngine::rotationMatrixB(const double theta) {
   Eigen::Matrix2d a;
   a << -std::sin(theta), -std::cos(theta),
       std::cos(theta), -std::sin(theta);
@@ -98,6 +102,11 @@ Eigen::MatrixXd PhysicsEngine::getJacobian() {
 Eigen::MatrixXd PhysicsEngine::getSystemMatrix() {
   return m_systemMatrix;
 }
+
+void PhysicsEngine::setGravity(const Eigen::Vector3d &gravity) {
+  m_gravity = gravity;
+}
+
 
 
 

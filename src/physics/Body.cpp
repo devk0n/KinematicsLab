@@ -25,6 +25,10 @@ std::vector<Eigen::Vector2d> Body::getVectors() {
   return m_vectors;
 }
 
+Eigen::Vector2d Body::getPosition() const {
+  return m_position;
+}
+
 double Body::getMass() const {
   return m_mass;
 }

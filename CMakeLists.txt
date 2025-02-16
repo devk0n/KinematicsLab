@@ -98,6 +98,8 @@ set(SOURCES
         src/physics/PhysicsEngine.cpp
         src/physics/GroundPoint.cpp
         src/physics/Body.cpp
+
+        src/shader/Shader.cpp
 )
 
 # Add executable

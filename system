@@ -1,0 +1,18 @@
+Body(1) {
+  .position(-0.5, 0.0)
+  .rotation(0.0)
+  .mass(10.0)
+  .inertia(60.0)
+}
+
+Body(2) {
+  .position(0.5, 0.0)
+  .rotation(0.0)
+  .mass(20.0)
+  .inertia(120.0)
+}
+
+Revolute(1) .Body(1) .Body(2) {
+  .vector(0.5, 0.0)
+  .vector(-0.5, 0.0)
+}
