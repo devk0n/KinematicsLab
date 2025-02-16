@@ -2,6 +2,7 @@
 #define APPLICATION_H
 
 #include <iostream>
+#include <src/physics/PhysicsEngine.h>
 
 #include "WindowManager.h"
 #include "Renderer.h"
@@ -13,14 +14,15 @@ public:
 
   bool initialize();
 
-  void run() const;
+  void run();
 
 private:
   WindowManager m_windowManager;
   Renderer m_renderer;
   ImGuiManager m_imGuiManager;
+  PhysicsEngine m_physicsEngine;
 
-  float m_lastFrameTime = 0.0f;
+  float m_lastFrameTime;
 
   void update(float deltaTime);
 };

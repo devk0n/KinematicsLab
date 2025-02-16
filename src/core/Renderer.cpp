@@ -1,4 +1,7 @@
 #include "Renderer.h"
+#include <iostream>
+#include <src/physics/PhysicsEngine.h>
+#include "glad/glad.h"
 
 bool Renderer::initialize() {
   m_initialized = true;

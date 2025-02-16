@@ -89,10 +89,15 @@ find_package(OpenGL REQUIRED)
 # Source files
 set(SOURCES
         main.cpp
+
         src/core/Application.cpp
         src/core/Renderer.cpp
         src/core/WindowManager.cpp
         src/core/ImGuiManager.cpp
+
+        src/physics/PhysicsEngine.cpp
+        src/physics/GroundPoint.cpp
+        src/physics/Body.cpp
 )
 
 # Add executable

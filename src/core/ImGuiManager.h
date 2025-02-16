@@ -7,15 +7,18 @@
 #include "glm/glm.hpp"
 
 #include <GLFW/glfw3.h>
+#include "src/physics/PhysicsEngine.h"
 
 class ImGuiManager {
 public:
-  static bool initialize(GLFWwindow *window);
+  bool initialize(GLFWwindow *window);
 
-  static void renderGui();
+  void renderGui(PhysicsEngine &physicsEngine);
+
+  void showPhysicsEngineData(PhysicsEngine &physicsEngine);
 
 private:
-  static void shutdown();
+  void shutdown();
 };
 
 
