@@ -32,3 +32,7 @@ double Body::getMass() const {
 Eigen::Matrix<double, 1, 1> Body::getInertia() const {
   return m_inertia;
 }
+
+double Body::getAngle() const {
+  return m_angle;
+}

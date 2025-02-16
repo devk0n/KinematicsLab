@@ -24,9 +24,11 @@ bool Application::initialize() {
 
   m_physicsEngine.addGroundPoint(groundPoint);
   m_physicsEngine.addBody(body);
-  m_physicsEngine.addBody(body1);
 
   m_physicsEngine.initialize();
+
+  m_physicsEngine.addConstraint(0, 0);
+
 
   return true;
 }

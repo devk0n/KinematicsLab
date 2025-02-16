@@ -15,6 +15,8 @@ public:
 
   Eigen::Matrix<double, 1, 1> getInertia() const;
 
+  double getAngle() const;
+
 private:
   Eigen::Vector2d m_position;
   Eigen::Vector2d m_velocity;

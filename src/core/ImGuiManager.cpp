@@ -39,6 +39,50 @@ void ImGuiManager::shutdown() {
     ImGui::DestroyContext();
 }
 
+// Helper function to display a matrix in a table
+void displayMatrixTable(const std::string &title, const Eigen::MatrixXd &matrix) {
+    if (ImGui::CollapsingHeader(title.c_str())) {
+        if (matrix.size() == 0) {
+            ImGui::Text("%s is empty.", title.c_str());
+        } else {
+            std::string sizeLabel = "Size: " + std::to_string(matrix.rows()) + "x" + std::to_string(matrix.cols());
+            ImGui::Text("%s", sizeLabel.c_str());
+
+            if (ImGui::BeginTable((title + "Table").c_str(), matrix.cols(), ImGuiTableFlags_Borders)) {
+                for (int row = 0; row < matrix.rows(); ++row) {
+                    ImGui::TableNextRow();
+                    for (int col = 0; col < matrix.cols(); ++col) {
+                        ImGui::TableSetColumnIndex(col);
+                        ImGui::Text("%.3f", matrix(row, col));
+                    }
+                }
+                ImGui::EndTable();
+            }
+        }
+    }
+}
+
+// Helper function to display a vector in a table
+void displayVectorTable(const std::string &title, const Eigen::VectorXd &vector) {
+    if (ImGui::CollapsingHeader(title.c_str())) {
+        if (vector.size() == 0) {
+            ImGui::Text("%s is empty.", title.c_str());
+        } else {
+            std::string sizeLabel = "Size: " + std::to_string(vector.rows());
+            ImGui::Text("%s", sizeLabel.c_str());
+
+            if (ImGui::BeginTable((title + "Table").c_str(), 1, ImGuiTableFlags_Borders)) {
+                for (int row = 0; row < vector.rows(); ++row) {
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0);
+                    ImGui::Text("%.3f", vector[row]);
+                }
+                ImGui::EndTable();
+            }
+        }
+    }
+}
+
 // Function to render PhysicsEngine data in ImGui
 void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
     ImGui::SetNextItemOpen(true);
@@ -47,7 +91,7 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
     Eigen::Vector3d gravity = physicsEngine.getGravity();
     if (ImGui::CollapsingHeader("Gravity")) {
         ImGui::Text("Gravity:");
-        ImGui::Text("X: %.3f, Y: %.3f, T: %.3f", gravity[0], gravity[1], gravity[2]);
+        ImGui::Text("X: %.3f, Y: %.3f, Z: %.3f", gravity[0], gravity[1], gravity[2]);
     }
     ImGui::SetNextItemOpen(true);
 
@@ -103,102 +147,27 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
             }
         }
     }
-    ImGui::SetNextItemOpen(true);
 
     // Show mass inertia matrix
-    Eigen::MatrixXd massInertiaMatrix = physicsEngine.getMassInertiaMatrix();
-    if (ImGui::CollapsingHeader("Mass Inertia Matrix")) {
-        if (massInertiaMatrix.size() == 0) {
-            ImGui::Text("Mass inertia matrix is empty.");
-        } else {
-            if (ImGui::BeginTable("MassInertiaMatrixTable", massInertiaMatrix.cols(),
-                                  ImGuiTableFlags_Borders)) {
-                for (int row = 0; row < massInertiaMatrix.rows(); ++row) {
-                    ImGui::TableNextRow();
-                    for (int col = 0; col < massInertiaMatrix.cols(); ++col) {
-                        ImGui::TableSetColumnIndex(col);
-                        ImGui::Text("%.3f", massInertiaMatrix(row, col));
-                    }
-                }
-                ImGui::EndTable();
-            }
-        }
-    }
     ImGui::SetNextItemOpen(true);
+    displayMatrixTable("Mass Inertia Matrix", physicsEngine.getMassInertiaMatrix());
 
     // Show right-hand vector
-    Eigen::VectorXd rightHandVector = physicsEngine.getRightHandVector();
-    if (ImGui::CollapsingHeader("Right Hand Vector")) {
-        if (rightHandVector.size() == 0) {
-            ImGui::Text("Right-hand vector is empty.");
-        } else {
-            if (ImGui::BeginTable("RightHandVectorTable", 1, ImGuiTableFlags_Borders)) {
-                for (int row = 0; row < rightHandVector.rows(); ++row) {
-                    ImGui::TableNextRow();
-                    ImGui::TableSetColumnIndex(0);
-                    ImGui::Text("%.3f", rightHandVector[row]);
-                }
-                ImGui::EndTable();
-            }
-        }
-    }
     ImGui::SetNextItemOpen(true);
+    displayVectorTable("Right Hand Vector", physicsEngine.getRightHandVector());
 
-    // Show solution
-    Eigen::VectorXd solution = physicsEngine.getSolution();
-    if (ImGui::CollapsingHeader("Solution Vector")) {
-        if (solution.size() == 0) {
-            ImGui::Text("Solution vector is empty.");
-        } else {
-            if (ImGui::BeginTable("SolutionVectorTable", 1, ImGuiTableFlags_Borders)) {
-                for (int row = 0; row < solution.rows(); ++row) {
-                    ImGui::TableNextRow();
-                    ImGui::TableSetColumnIndex(0);
-                    ImGui::Text("%.3f", solution[row]);
-                }
-                ImGui::EndTable();
-            }
-        }
-    }
+    // Show solution vector
     ImGui::SetNextItemOpen(true);
+    displayVectorTable("Solution Vector", physicsEngine.getSolution());
 
+    // Show Jacobian matrix with size in the title
+    ImGui::SetNextItemOpen(true);
     Eigen::MatrixXd jacobian = physicsEngine.getJacobian();
-    if (ImGui::CollapsingHeader("Jacobian")) {
-        if (jacobian.size() == 0) {
-            ImGui::Text("Jacobian matrix is empty.");
-        } else {
-            if (ImGui::BeginTable("JacobianTable", jacobian.cols(),
-                                  ImGuiTableFlags_Borders)) {
-                for (int row = 0; row < jacobian.rows(); ++row) {
-                    ImGui::TableNextRow();
-                    for (int col = 0; col < jacobian.cols(); ++col) {
-                        ImGui::TableSetColumnIndex(col);
-                        ImGui::Text("%.3f", jacobian(row, col));
-                    }
-                }
-                ImGui::EndTable();
-            }
-        }
-    }
+    std::string jacobianTitle = "Jacobian Matrix (Size: " + std::to_string(jacobian.rows()) + "x" +
+                                std::to_string(jacobian.cols()) + ")";
+    displayMatrixTable(jacobianTitle, jacobian);
+
+    // Show system matrix
     ImGui::SetNextItemOpen(true);
-
-    Eigen::MatrixXd systemMatrix = physicsEngine.getSystemMatrix();
-    if (ImGui::CollapsingHeader("System Matrix")) {
-        if (systemMatrix.size() == 0) {
-            ImGui::Text("System matrix is empty.");
-        } else {
-            if (ImGui::BeginTable("SystemMatrixTable", systemMatrix.cols(),
-                                  ImGuiTableFlags_Borders)) {
-                for (int row = 0; row < systemMatrix.rows(); ++row) {
-                    ImGui::TableNextRow();
-                    for (int col = 0; col < systemMatrix.cols(); ++col) {
-                        ImGui::TableSetColumnIndex(col);
-                        ImGui::Text("%.3f", systemMatrix(row, col));
-                    }
-                }
-                ImGui::EndTable();
-            }
-        }
-    }
+    displayMatrixTable("System Matrix", physicsEngine.getSystemMatrix());
 }
-

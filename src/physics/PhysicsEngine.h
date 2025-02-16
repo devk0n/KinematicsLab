@@ -17,6 +17,10 @@ public:
 
   void addBody(const Body &body);
 
+  void addConstraint(int bodyID, int vectorID);
+
+  Eigen::Matrix2d rotationMatrixB(double theta);
+
   std::vector<GroundPoint> getGroundPoints() const;
 
   std::vector<Body> getBodies() const;

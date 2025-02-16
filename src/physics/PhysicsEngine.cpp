@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <utility>
+#include <glm/detail/type_vec3.hpp>
 
 PhysicsEngine::PhysicsEngine(Eigen::Vector3d gravity)
   : m_gravity(std::move(gravity)),
@@ -39,7 +40,6 @@ void PhysicsEngine::initialize() {
 
   m_systemMatrix.block(0, 0, numBodies * dof, numBodies * dof) = m_massInertiaMatrix;
 
-
   m_initialized = true;
 }
 
@@ -50,6 +50,22 @@ void PhysicsEngine::addGroundPoint(const GroundPoint &groundPoint) {
 void PhysicsEngine::addBody(const Body &body) {
   m_bodies.push_back(body);
 }
+
+Eigen::Matrix2d PhysicsEngine::rotationMatrixB(double theta) {
+  Eigen::Matrix2d a;
+  a << -std::sin(theta), -std::cos(theta),
+      std::cos(theta), -std::sin(theta);
+  return a;
+}
+
+void PhysicsEngine::addConstraint(const int bodyID, const int vectorID) {
+  Body body = m_bodies[bodyID];
+
+  m_jacobian.block(0, 0, 2, 2) = Eigen::Matrix2d::Identity();
+
+  m_jacobian.block(0, 2, 2, 1) = rotationMatrixB(body.getAngle()) * body.getVectors()[vectorID];
+}
+
 
 std::vector<Body> PhysicsEngine::getBodies() const {
   return m_bodies;
