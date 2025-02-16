@@ -33,7 +33,12 @@ void PhysicsEngine::initialize() {
     const int n = 3 * i;
     m_massInertiaMatrix.block(n, n, 2, 2) = Eigen::Matrix2d::Identity() * m_bodies[i].getMass();
     m_massInertiaMatrix.block(2 + n, 2 + n, 1, 1) = m_bodies[i].getInertia();
+
+    m_rightHandVector.segment(n, 3) = m_gravity;
   }
+
+  m_systemMatrix.block(0, 0, numBodies * dof, numBodies * dof) = m_massInertiaMatrix;
+
 
   m_initialized = true;
 }

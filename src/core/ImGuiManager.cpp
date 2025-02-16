@@ -41,12 +41,15 @@ void ImGuiManager::shutdown() {
 
 // Function to render PhysicsEngine data in ImGui
 void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
+    ImGui::SetNextItemOpen(true);
+
     // Show gravity
     Eigen::Vector3d gravity = physicsEngine.getGravity();
     if (ImGui::CollapsingHeader("Gravity")) {
         ImGui::Text("Gravity:");
         ImGui::Text("X: %.3f, Y: %.3f, T: %.3f", gravity[0], gravity[1], gravity[2]);
     }
+    ImGui::SetNextItemOpen(true);
 
     // Show ground points
     const auto groundPoints = physicsEngine.getGroundPoints();
@@ -56,8 +59,8 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
         } else {
             if (ImGui::BeginTable("GroundPointsTable", 3, ImGuiTableFlags_Borders)) {
                 ImGui::TableSetupColumn("ID");
-                ImGui::TableSetupColumn("Position X");
-                ImGui::TableSetupColumn("Position Y");
+                ImGui::TableSetupColumn("Position X (m)");
+                ImGui::TableSetupColumn("Position Y (m)");
                 ImGui::TableHeadersRow();
 
                 for (size_t i = 0; i < groundPoints.size(); ++i) {
@@ -73,6 +76,7 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
             }
         }
     }
+    ImGui::SetNextItemOpen(true);
 
     // Show bodies
     auto bodies = physicsEngine.getBodies();
@@ -82,8 +86,8 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
         } else {
             if (ImGui::BeginTable("BodiesTable", 3, ImGuiTableFlags_Borders)) {
                 ImGui::TableSetupColumn("ID");
-                ImGui::TableSetupColumn("Mass");
-                ImGui::TableSetupColumn("Inertia");
+                ImGui::TableSetupColumn("Mass (kg)");
+                ImGui::TableSetupColumn("Inertia (kgm^2)");
                 ImGui::TableHeadersRow();
 
                 for (size_t i = 0; i < bodies.size(); ++i) {
@@ -99,6 +103,7 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
             }
         }
     }
+    ImGui::SetNextItemOpen(true);
 
     // Show mass inertia matrix
     Eigen::MatrixXd massInertiaMatrix = physicsEngine.getMassInertiaMatrix();
@@ -119,6 +124,7 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
             }
         }
     }
+    ImGui::SetNextItemOpen(true);
 
     // Show right-hand vector
     Eigen::VectorXd rightHandVector = physicsEngine.getRightHandVector();
@@ -136,6 +142,7 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
             }
         }
     }
+    ImGui::SetNextItemOpen(true);
 
     // Show solution
     Eigen::VectorXd solution = physicsEngine.getSolution();
@@ -153,6 +160,7 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
             }
         }
     }
+    ImGui::SetNextItemOpen(true);
 
     Eigen::MatrixXd jacobian = physicsEngine.getJacobian();
     if (ImGui::CollapsingHeader("Jacobian")) {
@@ -172,6 +180,7 @@ void ImGuiManager::showPhysicsEngineData(PhysicsEngine &physicsEngine) {
             }
         }
     }
+    ImGui::SetNextItemOpen(true);
 
     Eigen::MatrixXd systemMatrix = physicsEngine.getSystemMatrix();
     if (ImGui::CollapsingHeader("System Matrix")) {
